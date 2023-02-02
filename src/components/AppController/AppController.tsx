@@ -4,23 +4,16 @@ import { TiHeart, TiTimes } from "react-icons/ti";
 
 export const AppController: React.FC = () => {
     const [page, setPage] = useState<number>(0);
-    const carouselRef = useRef<HTMLDivElement>(null);
 
     const nextProfile = () => {
         if(page < profiles.length - 1) setPage(page + 1);
     }
 
-    useEffect(() => {
-        if (carouselRef.current) {
-            carouselRef.current.children[page].scrollIntoView({ behavior: "smooth" });
-        }
-    }, [page]);
-
     return (
         <div className="w-full h-full sm:w-[600px] sm:h-[1000px] sm:border-[10px] sm:border-purple-400 sm:rounded-3xl overflow-hidden">
-            <div className="flex flex-row h-full overflow-x-hidden" ref={carouselRef}>
+            <div className="flex flex-row h-full overflow-x-hidden">
                 {profiles.map(({id, name, images, bio, prompts }) => (
-                    <div key={id} className="flex flex-col items-center min-w-full max-w-full h-full overflow-y-scroll scrollbar-hide p-2 sm:p-8 gap-y-4 bg-gray-100">
+                    <div key={id} style={{transform: `translateX(-${page * 100}%)`, transition: "0.3s ease-out"}} className="transform flex flex-col items-center min-w-full max-w-full h-full overflow-y-scroll scrollbar-hide p-2 sm:p-8 gap-y-4 bg-gray-100">
                         <div className="rounded-3xl bg-white">
                             <h1 className="text-2xl font-bold w-full pt-6 px-6 pb-[20px]">{name}</h1>
                             <img className="object-cover h-[365px] w-full" src={`/${images[0]}`} alt={name} />
