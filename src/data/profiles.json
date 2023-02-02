@@ -1,0 +1,77 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "age": 24,
+        "bio": "I am a software developer. I love to code and I love to learn new things. I am a huge fan of the Marvel Cinematic Universe and I love to play video games in my free time.",
+        "images": [
+            "person1-image1.jpg",
+            "person1-image2.jpg",
+            "person1-image3.jpg"
+        ],
+        "prompts": [
+            {
+                "prompt": "What is your favorite color?",
+                "answer": "Blue! Everytime I think about the color blue I turn into a smurf."
+            },
+            {
+                "prompt": "What is your favorite food?",
+                "answer": "Pizza is my favorite food. I could eat it every day! I also love to eat ice cream. I love to eat ice cream every day!"
+            },
+            {
+                "prompt": "What is your favorite movie?",
+                "answer": "The Matrix is my favorite movie. I love the action and the special effects. I also love the Harry Potter series. I love the magic and the characters."
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Jane Doe",
+        "age": 20,
+        "bio": "I am a professional photographer. I love to travel and take pictures of the world around me. I am a huge fan of the Harry Potter series and I love to read in my free time.",
+        "images": [
+            "person2-image1.jpg",
+            "person2-image2.jpg",
+            "person2-image3.jpg"
+        ],
+        "prompts": [
+            {
+                "prompt": "What is your favorite color?",
+                "answer": "Red is my favorite color. I love the color red. I love the color red."
+            },
+            {
+                "prompt": "What is your favorite food?",
+                "answer": "Ice Cream is my favorite food. I love to eat ice cream. I love to eat ice cream. I love to eat ice cream."
+            },
+            {
+                "prompt": "What is your favorite movie?",
+                "answer": "The Notebook is my favorite movie. I love the romance and the characters. I remember watching this movie with my boyfriend."
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "John Smith",
+        "age": 34,
+        "bio": "I am a professional chef. I love to cook and I love to try new recipes. I am a huge fan of the Star Wars series and I love to play sports in my free time.",
+        "images": [
+            "person3-image1.jpg",
+            "person3-image2.jpg",
+            "person3-image3.jpg"
+        ],
+        "prompts": [
+            {
+                "prompt": "What is your favorite color?",
+                "answer": "Green is not my favorite color. I do not like the color green. But I do like the color blue."
+            },
+            {
+                "prompt": "What is your favorite food?",
+                "answer": "Steak! There is nothing better than a good steak. Three times a week I eat steak."
+            },
+            {
+                "prompt": "What is your favorite movie?",
+                "answer": "Wow, that is a tough question. I love the Star Wars series. I also love the Marvel Cinematic Universe."
+            }
+        ]
+    }
+]
