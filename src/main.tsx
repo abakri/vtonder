@@ -6,6 +6,8 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from 'react-query'
 
+import NiceModal from "@ebay/nice-modal-react";
+
 import {
   BrowserRouter,
   createBrowserRouter,
@@ -53,7 +55,9 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <App />
+        <NiceModal.Provider>
+          <App />
+        </NiceModal.Provider>
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
