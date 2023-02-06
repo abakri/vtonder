@@ -2,14 +2,13 @@ import React from "react"
 import { useMutation, useQuery } from "react-query"
 import pb from "../../lib/pocketbase"
 
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import { useParams } from "react-router";
 import { ProfileFormValidation } from "../../validation/ProfileFormValidation";
 import { SessionType } from "../../types/SessionTypes";
 import { Dropzone } from "../SharedComponents/Dropzone";
 import { TextInput } from "../SharedComponents/TextInput";
 import { TextArea } from "../SharedComponents/TextArea";
-import { Button } from "@material-tailwind/react";
 
 export type PromptType = {
     id: string
@@ -141,7 +140,7 @@ export const ProfileForm: React.FC = () => {
                             <TextArea label={prompts[2].prompt} name="promptAnswer3" error={errors.promptAnswer3} placeholder="Your response here!" onChange={(value) => setFieldValue("promptAnswer3", value)} />
 
                             {formSubmitError && <div className="text-red-500 text-sm">Error while submitting form</div>}
-                            <Button className="w-1/2 h-[50px] border-2 border-black transition hover:bg-black hover:text-white" type="submit" variant="outlined" disabled={isLoadingFormSubmit}>Submit</Button>
+                            <button className="w-1/2 h-[50px] border-2 border-black transition hover:bg-black hover:text-white" type="submit" disabled={isLoadingFormSubmit}>Submit</button>
 
                         </Form>
                     )}

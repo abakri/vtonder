@@ -123,7 +123,7 @@ export const AppController: React.FC = ({ }) => {
             </button>
 
             {/* sound buttons */}
-            <div className="self-start mt-[26%] flex flex-col gap-y-4 h-[13%] w-[16px] overflow-hidden">
+            <div className="flex mb-[470px] flex-col gap-y-4 h-[170px] w-[16px] overflow-hidden">
                 <div className="grow w-full bg-[#ffd1dc] rounded-lg translate-x-[8px]" />
                 <div className="grow w-full bg-[#ffd1dc] rounded-lg translate-x-[8px]" />
             </div>
@@ -149,7 +149,7 @@ export const AppController: React.FC = ({ }) => {
             </div>
 
             {/* power button */}
-            <div className="self-start mt-[29%] flex flex-col gap-y-4 h-[9%] w-[16px] overflow-hidden">
+            <div className="flex mb-[490px] flex-col gap-y-4 h-[110px] w-[16px] overflow-hidden">
                 <div className="w-full h-full bg-[#ffd1dc] rounded-lg -translate-x-[8px]" />
             </div>
 
