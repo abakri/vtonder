@@ -65,7 +65,7 @@ export const Sessions: React.FC<{}> = () => {
                             <div
                                 className="flex justify-center items-center w-full p-4 border-2 border-black text-center h-12 rounded-lg cursor-pointer"
                                 key={session.id}
-                                onClick={() => navigate(`/${session.id}/form`)}
+                                onClick={() => navigate(`/${session.id}/swipe`)}
                             >
                                 <p>{session.name}</p>
                             </div>

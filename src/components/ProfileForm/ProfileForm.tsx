@@ -98,7 +98,8 @@ export const ProfileForm: React.FC = () => {
         await uploadImage(data.image3 as File, profile.id)
         await uploadPrompts(data, profile.id)
     }
-    const { mutate: submitForm, isLoading: isLoadingFormSubmit, isSuccess: formSubmitSuccess } = useMutation((data: ProfileSubmissionFormType) => {
+    const { mutate: submitForm, isLoading: isLoadingFormSubmit, isSuccess: formSubmitSuccess, isError: formSubmitError } = useMutation((data: ProfileSubmissionFormType) => {
+        console.log("mutate")
         return createProfile(data)
     })
 
@@ -111,30 +112,35 @@ export const ProfileForm: React.FC = () => {
     if (!session?.open) return (
         <div>Session is closed</div>
     )
+    if (loadingPrompts) return (
+        <div>Loading...</div>
+    )
+    if (isLoadingFormSubmit) return (
+        <div>Submitting your profile...</div>
+    )
     return (
         <div className="flex w-full justify-center items-center">
-            {loadingPrompts && <div>Loading...</div>}
             {!loadingPrompts && (
                 <Formik initialValues={initialProfileSubmissionData} validationSchema={ProfileFormValidation} onSubmit={(values) => { submitForm(values) }} validateOnBlur={false} validateOnChange={true}>
                     {({ setFieldValue, errors, touched, values }) => (
                         <Form className="flex flex-col gap-y-2 w-full sm:w-1/2 pt-12 pb-[120px] items-center">
                             <h1 className="text-lg font-bold">Submit your profile</h1>
 
-                            <TextInput label="Name" name="name" error={errors.name}/>
-                            <TextInput type="number" label="Age" name="age" error={errors.age}/>
-                            <TextArea label="Bio" name="bio" error={errors.bio} placeholder="Tell us about yourself!"/>
+                            <TextInput label="Name" name="name" error={errors.name} onChange={(value) => setFieldValue("name", value)} />
+                            <TextInput type="number" label="Age" name="age" error={errors.age} onChange={(value) => setFieldValue("age", value)} />
+                            <TextArea label="Bio" name="bio" error={errors.bio} placeholder="Tell us about yourself!" onChange={(value) => setFieldValue("bio", value)} />
 
                             <div className="flex flex-row gap-x-2 items-center justify-center">
                                 <Dropzone label="Image 1" name="image1" value={values.image1} error={touched.image1 && errors.image1 ? errors.image1 : undefined} onDrop={(files) => { if (files.length > 0) setFieldValue("image1", files[0]) }} />
-                                <Dropzone label="Image 2" name="image2" value={values.image2} error={errors.image2} onDrop={(files) => { if (files.length > 0) setFieldValue("image2", files[0]) }} />
-                                <Dropzone label="Image 3" name="image3" value={values.image3} error={errors.image3} onDrop={(files) => { if (files.length > 0) setFieldValue("image3", files[0]) }} />
+                                <Dropzone label="Image 2" name="image2" value={values.image2} error={touched.image2 && errors.image2 ? errors.image2 : undefined} onDrop={(files) => { if (files.length > 0) setFieldValue("image2", files[0]) }} />
+                                <Dropzone label="Image 3" name="image3" value={values.image3} error={touched.image3 && errors.image3 ? errors.image3 : undefined} onDrop={(files) => { if (files.length > 0) setFieldValue("image3", files[0]) }} />
                             </div>
 
-                            <TextArea label={prompts[0].prompt} name="promptAnswer1" error={errors.promptAnswer1} placeholder="Your response here!"/>
-                            <TextArea label={prompts[1].prompt} name="promptAnswer2" error={errors.promptAnswer2} placeholder="Your response here!"/>
-                            <TextArea label={prompts[2].prompt} name="promptAnswer3" error={errors.promptAnswer3} placeholder="Your response here!"/>
+                            <TextArea label={prompts[0].prompt} name="promptAnswer1" error={errors.promptAnswer1} placeholder="Your response here!" onChange={(value) => setFieldValue("promptAnswer1", value)} />
+                            <TextArea label={prompts[1].prompt} name="promptAnswer2" error={errors.promptAnswer2} placeholder="Your response here!" onChange={(value) => setFieldValue("promptAnswer2", value)} />
+                            <TextArea label={prompts[2].prompt} name="promptAnswer3" error={errors.promptAnswer3} placeholder="Your response here!" onChange={(value) => setFieldValue("promptAnswer3", value)} />
 
-                            <div className="text-red-500 text-sm">{ }</div>
+                            {formSubmitError && <div className="text-red-500 text-sm">Error while submitting form</div>}
                             <Button className="w-1/2 h-[50px] border-2 border-black transition hover:bg-black hover:text-white" type="submit" variant="outlined" disabled={isLoadingFormSubmit}>Submit</Button>
 
                         </Form>

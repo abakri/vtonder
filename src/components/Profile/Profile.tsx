@@ -15,7 +15,7 @@ export const Profile: React.FC<ProfileProps> = ({ profile, choice, onChoice, cur
     const scrollable = useRef<HTMLDivElement>(null)
 
     const getImageUrl = (image: ProfileImageType): string => {
-        return `http://localhost:8090/api/files/profile_images/${image.id}/${image.filename}`
+        return `https://server.vtonder.com/api/files/profile_images/${image.id}/${image.filename}`
     }
     const profileChoice = choice || Choice.undecided
     const dislikeStyling = profileChoice === Choice.dislike ? "bg-red-500 text-white" : ""
