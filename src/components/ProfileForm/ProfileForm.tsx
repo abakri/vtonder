@@ -152,7 +152,7 @@ export const ProfileForm: React.FC = () => {
                 {({ setFieldValue, errors, touched, values }) => (
                     <Form className="flex flex-col gap-y-6 w-full sm:w-[450px] pb-[120px] px-4 sm:px-0 items-center">
                         <TextInput label="Name" name="name" error={errors.name} onChange={(value) => setFieldValue("name", value)} />
-                        <TextInput type="number" label="Age" name="age" error={errors.age} onChange={(value) => setFieldValue("age", value)} />
+                        <TextInput label="Age" name="age" error={errors.age} onChange={(value) => setFieldValue("age", value)} />
                         <TextArea label="Bio" name="bio" error={errors.bio} placeholder="Tell us about yourself!" onChange={(value) => setFieldValue("bio", value)} />
 
                         <div className="flex flex-col w-full sm:flex-row gap-x-2 gap-y-4 sm:gap-y-0 items-center justify-center">

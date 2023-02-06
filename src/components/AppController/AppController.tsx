@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import { ProfileType } from "../../types/ProfileTypes";
 import { Profile } from "../Profile/Profile";
 import { Choice } from "../../static/Choice";
-import { TiBatteryLow, TiWiFi } from "react-icons/ti";
+import { TiBatteryLow } from "react-icons/ti";
 import { FaChevronLeft, FaChevronRight, FaWifi } from "react-icons/fa";
 import { MdOutlineSignalCellularAlt } from "react-icons/md";
 import { Logo } from "../SvgComponents/VTonderLogo";
@@ -31,7 +31,7 @@ export type FetchedProfileRelatedData = {
 
 export type FetchedProfile = {
     id: string;
-    age: number;
+    age: string;
     bio: string;
     name: string;
     expand: FetchedProfileRelatedData;

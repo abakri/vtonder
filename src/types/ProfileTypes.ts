@@ -12,7 +12,7 @@ export type ProfileImageType = {
 export type ProfileType = {
     id: string
     name: string
-    age: number
+    age: string
     bio: string
     images: ProfileImageType[]
     prompts: ProfilePromptType[]
