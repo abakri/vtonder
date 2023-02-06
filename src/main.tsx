@@ -4,12 +4,19 @@ import React from "react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
-import { Store } from "@reduxjs/toolkit";
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+import {
+  BrowserRouter,
+  createBrowserRouter,
+} from "react-router-dom";
 
 import "./index.css";
+import { Login } from "./containers/Login/Login";
+import { Sessions } from "./containers/Sessions/Sessions";
+import { AppController } from "./components";
+import { ProfileForm } from "./components/ProfileForm/ProfileForm";
 import App from "./App";
-import { store } from "./app/store";
 
 const container = document.getElementById("root");
 
@@ -17,24 +24,37 @@ if (!container) throw new Error("Could not find root element with id 'root'");
 
 const root = createRoot(container);
 
-// Extend the Window interface in the global namespace
-// Taken from https://stackoverflow.com/questions/56457935/typescript-error-property-x-does-not-exist-on-type-window
-declare global {
-    interface Window {
-        store: Store;
-        Cypress: never;
-    }
-}
+// react query
+const queryClient = new QueryClient()
 
-// If we are running Cypress tests, set the store equal to the window.store so it's accessible
-if (window.Cypress) {
-    window.store = store;
-}
+// create router
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login />
+  },
+  {
+    path: "/dashboard/",
+    element: <Sessions />
+  },
+  {
+    path: "/:sessionId/swipe/",
+    element: <AppController />
+  },
+  {
+    path: "/:sessionId/form/",
+    element: <ProfileForm />
+  }
+
+]);
+
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </QueryClientProvider>
   </React.StrictMode>
 );
