@@ -4,6 +4,7 @@ export const ProfileFormValidation = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     age: Yup.string().required('Age is required'),
     bio: Yup.string().required('Bio is required'),
+    social: Yup.string().required('Twitter handle is required'),
     image1: Yup.mixed<File | null>().test("isSmallEnough", "File must be less than 30mb", file => !file || file.size < 31_457_280).required('Image is required'),
     image2: Yup.mixed<File | null>().test("isSmallEnough", "File must be less than 30mb", file => !file || file.size < 31_457_280).required('Image is required'),
     image3: Yup.mixed<File | null>().test("isSmallEnough", "File must be less than 30mb", file => !file || file.size < 31_457_280).required('Image is required'),

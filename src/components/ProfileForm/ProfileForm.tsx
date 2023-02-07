@@ -45,6 +45,7 @@ export const ProfileForm: React.FC = () => {
         name: string
         age: string
         bio: string
+        social: string
         image1: File | null
         image2: File | null
         image3: File | null
@@ -57,6 +58,7 @@ export const ProfileForm: React.FC = () => {
         name: "",
         age: "",
         bio: "",
+        social: "",
         image1: null,
         image2: null,
         image3: null,
@@ -93,6 +95,7 @@ export const ProfileForm: React.FC = () => {
             name: data.name,
             age: data.age,
             bio: data.bio,
+            social: data.social,
             session: sessionId,
         })
         await uploadImage(data.image1 as File, profile.id)
@@ -164,6 +167,8 @@ export const ProfileForm: React.FC = () => {
                         <TextArea label={prompts[0].prompt} name="promptAnswer1" error={errors.promptAnswer1} placeholder="Your response here!" onChange={(value) => setFieldValue("promptAnswer1", value)} />
                         <TextArea label={prompts[1].prompt} name="promptAnswer2" error={errors.promptAnswer2} placeholder="Your response here!" onChange={(value) => setFieldValue("promptAnswer2", value)} />
                         <TextArea label={prompts[2].prompt} name="promptAnswer3" error={errors.promptAnswer3} placeholder="Your response here!" onChange={(value) => setFieldValue("promptAnswer3", value)} />
+
+                        <TextInput label="Twitter @" name="social" error={errors.social} onChange={(value) => setFieldValue("social", value)} />
 
                         {formSubmitError && <div className="text-[#ff5c98] text-sm">Error while submitting form</div>}
                         <button
