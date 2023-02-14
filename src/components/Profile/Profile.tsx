@@ -67,7 +67,7 @@ export const Profile: React.FC<ProfileProps> = ({ profile, choice, onChoice, cur
                 <h1 className="text-lg font-fredoka">{prompts[0].prompt}</h1>
                 <p className="font-semibold text-2xl font-fredoka">{prompts[0].answer}</p>
             </div>
-            <img className="object-cover bg-white" src={getImageUrl(images[2])} alt={name} onClick={() => openModal(getImageUrl(images[2]))} />
+            <img className="object-cover h-[365px] w-full rounded-3xl bg-white" src={getImageUrl(images[2])} alt={name} onClick={() => openModal(getImageUrl(images[2]))} />
             <div className="flex flex-col gap-y-2 w-full px-6 py-[70px] rounded-3xl bg-white">
                 <h1 className="text-lg font-fredoka">{prompts[1].prompt}</h1>
                 <p className="font-semibold text-2xl font-fredoka">{prompts[1].answer}</p>
