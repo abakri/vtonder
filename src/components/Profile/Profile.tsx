@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { TiTimes, TiHeart } from 'react-icons/ti'
+import { TiTimes, TiHeart, TiStarFullOutline} from 'react-icons/ti'
 import { Choice } from '../../static/Choice'
 import { ProfileImageType, ProfileType } from '../../types/ProfileTypes'
 import { ImageModal } from '../ImageModal/ImageModal';
@@ -22,13 +22,15 @@ export const Profile: React.FC<ProfileProps> = ({ profile, choice, onChoice, cur
     const profileChoice = choice || Choice.undecided
     const dislikeStyling = profileChoice === Choice.dislike ? "bg-red-500 text-white" : ""
     const likeStyling = profileChoice === Choice.like ? "bg-pink-300 text-white" : ""
+    const superlikeStyling = profileChoice === Choice.superlike ? "bg-blue-300 text-white" : ""
 
     const renderChoice = () => {
         if (choice == Choice.undecided) return null
-        if (choice == Choice.like) return <TiHeart className="text-red-500 mr-4 text-3xl" />
-        if (choice == Choice.dislike) return <TiTimes className="text-red-500 mr-4 text-3xl" />
+        else if (choice == Choice.like) return <TiHeart className="text-red-500 mr-4 text-3xl" />
+        else if (choice == Choice.dislike) return <TiTimes className="text-red-500 mr-4 text-3xl" />
+        else if (choice == Choice.superlike) return <TiStarFullOutline className="text-blue-500 mr-4 text-3xl" />
     }
-
+        
     useEffect(() => {
         if (scrollable.current && isCurrentPage) {
             scrollable.current.scrollTo(0, 0)
@@ -44,6 +46,12 @@ export const Profile: React.FC<ProfileProps> = ({ profile, choice, onChoice, cur
         if (choice === Choice.dislike) onChoice?.(Choice.undecided)
         else onChoice?.(Choice.dislike)
     }
+
+    const clickSuperlike = () => {
+        if (choice === Choice.superlike) onChoice?.(Choice.undecided)
+        else onChoice?.(Choice.superlike)
+    }
+
 
     const openModal = (imageUrl: string) => {
         NiceModal.show(ImageModal, { src: imageUrl, alt: "profile"})
@@ -83,6 +91,14 @@ export const Profile: React.FC<ProfileProps> = ({ profile, choice, onChoice, cur
                 >
                     <TiTimes />
                 </button>
+                {
+                <button
+                    className={`flex justify-center items-center bg-white border-4 border-black rounded-full text-[80px] select-none scale-100 transition ${superlikeStyling}`}
+                    onClick={clickSuperlike}
+                >
+                    <TiStarFullOutline />
+                </button>
+                }
                 <button
                     className={`flex justify-center items-center bg-white border-4 border-black rounded-full text-[80px] select-none scale-100 transition ${likeStyling}`}
                     onClick={clickLike}
