@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import { useMutation } from 'react-query';
 import pb from "../../lib/pocketbase"
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Record, RecordAuthResponse } from 'pocketbase';
 import { Logo } from '../../components/SvgComponents/VTonderLogo';
+import { auth } from '../../lib/firebase';
+import { onAuthStateChanged, signInWithEmailAndPassword, User, UserCredential } from 'firebase/auth';
 
 export const Login: React.FC<{}> = () => {
   type LoginFormType = {
@@ -22,13 +24,24 @@ export const Login: React.FC<{}> = () => {
     return pb.collection("users").authWithPassword(emailOrUsername, password);
   }
 
-  const { mutate: login, isError, isLoading } = useMutation(pocketbaseLogin)
+  const firebaseLogin = (loginData: LoginFormType): Promise<UserCredential> => {
+    const { emailOrUsername, password } = loginData;
+    return signInWithEmailAndPassword(auth, emailOrUsername, password);
+  }
+
+  const { mutate: login, isError, isLoading } = useMutation(firebaseLogin);
 
   const containerStyle = `flex flex-col w-1/4 gap-y-2 p-4 font-fredoka text-[#ff4589] rounded-md border-[3px] border-[#ff5c98]  bg-[#ffe0e8]`
+  
+  const navigate = useNavigate();
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if(user) navigate("/dashboard")
+    });
+  }, []);
 
   return (
     <>
-      {pb.authStore.isValid && <Navigate to="/dashboard" />}
       <Formik
         initialValues={loginFormInitialValues}
         onSubmit={({ emailOrUsername, password }) => { login({ emailOrUsername, password }) }}
