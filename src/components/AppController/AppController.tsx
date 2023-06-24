@@ -2,99 +2,34 @@ import React, { useMemo, useState } from "react";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { useParams } from "react-router";
-import pb from "../../lib/pocketbase";
 import { useQuery } from "react-query";
 import { ProfileType } from "../../types/ProfileTypes";
 import { Profile } from "../Profile/Profile";
-import { Choice } from "../../static/Choice";
 import { TiBatteryLow } from "react-icons/ti";
 import { FaChevronLeft, FaChevronRight, FaWifi } from "react-icons/fa";
 import { MdOutlineSignalCellularAlt } from "react-icons/md";
 import { Logo } from "../SvgComponents/VTonderLogo";
-
-export type FetchedPrompt = {
-  prompt: { prompt: string }
-}
-
-export type FetchedProfileImage = {
-  id: string
-  image: string;
-}
-
-export type FetchedProfilePrompt = {
-  answer: string;
-  expand: FetchedPrompt;
-}
-
-export type FetchedProfileRelatedData = {
-  "profile_images(profile)": FetchedProfileImage[];
-  "profile_prompts(profile)": FetchedProfilePrompt[];
-}
-
-export type FetchedProfile = {
-  id: string
-  choice: Choice | null
-  age: string
-  bio: string
-  name: string
-  session: string
-  expand: FetchedProfileRelatedData
-}
+import { getProfilesForSessionFromFirebase } from "../../repositories/profile.repository";
+import { Choice } from "../../static/choice";
 
 export const AppController: React.FC = ({ }) => {
-
   const { sessionId } = useParams();
+  if (!sessionId) return (<div>no session id</div>);
+
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [filter, setFilter] = useState<string>('all');
-
-  // fetch profiles
-  const getProfilesForSession = (): Promise<FetchedProfile[]> => {
-    return pb.collection("profiles").getFullList(200, {
-      sort: "created",
-      filter: `session.id = "${sessionId}"`,
-      expand: "profile_images(profile),profile_prompts(profile).prompt",
-    })
-  }
-
-  // helper to transorm fetched profiles into internal profiles
-  const transformProfiles = (profiles: FetchedProfile[] | undefined): ProfileType[] => {
-    if (!profiles) return []
-    return profiles.map((data: FetchedProfile) => {
-      return {
-        id: data.id,
-        name: data.name,
-        choice: data.choice as Choice,
-        bio: data.bio,
-        age: data.age,
-        session: data.session,
-        images: data.expand["profile_images(profile)"].map(image => ({ id: image.id, filename: image.image })),
-        prompts: data.expand["profile_prompts(profile)"].map(prompt => {
-          return {
-            prompt: prompt.expand.prompt.prompt,
-            answer: prompt.answer,
-          }
-        })
-      }
-    })
-  }
-
-
-  const useSessionProfileQuery = () => {
-    let queryInfo = useQuery(`profiles-for-session-${sessionId}`, getProfilesForSession)
-    const data = useMemo(() => transformProfiles(queryInfo.data), [queryInfo.data])
-    return { ...queryInfo, data }
-  }
 
   const filterProfiles = (profiles: ProfileType[]): ProfileType[] => {
     setCurrentPage(0); // reset page to the beginning
     if (filter === 'all') return profiles;
     if (filter === 'like') return profiles.filter(profile => profile.choice === Choice.like || profile.choice === Choice.superlike);
-    if (filter === 'superlike') return profiles.filter(profile => profile.choice === Choice.superlike);
+    if (filter === 'superlike') return profiles.filter(profile => { profile.choice === Choice.superlike });
     if (filter === 'dislike') return profiles.filter(profile => profile.choice === Choice.dislike);
     return profiles
   }
 
-  const { data: profiles, isLoading, isError, isSuccess } = useSessionProfileQuery()
+  const { data: profiles, isLoading, isError, isSuccess } = useQuery(`profiles-for-session-${sessionId}`, () => getProfilesForSessionFromFirebase(sessionId));
+
   const filteredProfiles = useMemo(() => filterProfiles(profiles || []), [profiles, filter]) // only update filtered profiles when profiles is updated
 
   const nextProfile = () => {
@@ -167,7 +102,7 @@ export const AppController: React.FC = ({ }) => {
           <FaChevronRight className="=translate-x-[2px]" />
         </button>
 
-        <Dropdown options={['all', 'like', 'superlike', 'dislike']} value={'all'} onChange={({value}) => setFilter(value)} />
+        <Dropdown options={['all', 'like', 'superlike', 'dislike']} value={'all'} onChange={({ value }) => setFilter(value)} />
       </div>
     </div>
 

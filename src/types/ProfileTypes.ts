@@ -1,22 +1,22 @@
-import { Choice } from "../static/Choice"
+import { Choice } from "../static/choice";
 
-export type ProfilePromptType = {
+export type ProfilePrompt = {
     prompt: string,
     answer: string,
 }
 
-export type ProfileImageType = {
-    id: string,
-    filename: string,
+export type ProfileImage = {
+    storageLocation: string;
 }
 
 export type ProfileType = {
-    id: string
-    name: string
-    age: string
-    choice: Choice | null
-    bio: string
-    session: string
-    images: ProfileImageType[]
-    prompts: ProfilePromptType[]
+    id: string;
+    createdAt: Date;
+    name: string;
+    age: string;
+    choice: Choice | null;
+    bio: string;
+    session: string;
+    images: ProfileImage[];
+    prompts: ProfilePrompt[];
 }

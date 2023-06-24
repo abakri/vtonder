@@ -1,47 +1,58 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { TiTimes, TiHeart, TiStarFullOutline } from 'react-icons/ti'
-import { Choice } from '../../static/Choice'
-import { ProfileImageType, ProfileType } from '../../types/ProfileTypes'
+import { Choice } from '../../static/choice'
+import { ProfileImage, ProfileType } from '../../types/ProfileTypes'
 import { ImageModal } from '../ImageModal/ImageModal';
 import NiceModal from '@ebay/nice-modal-react';
 
 import { useMutation, useQueryClient } from "react-query"
 
-import pb from "../../lib/pocketbase"
+import { getDownloadURL, ref } from 'firebase/storage';
+import { db, storage } from '../../lib/firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 
 type ProfileProps = {
   profile: ProfileType
   currentPage: number
   isCurrentPage: boolean
 }
+
 export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurrentPage }) => {
   const queryClient = useQueryClient()
 
   const { id, age, choice, name, bio, images, prompts, session } = profile
   const [currentChoice, setCurrentChoice] = useState<Choice>(choice || Choice.undecided)
+  const [imageUrls, setImageUrls] = useState<string[]>(new Array(images.length).fill(""))
 
   const scrollable = useRef<HTMLDivElement>(null)
 
-  const getImageUrl = (image: ProfileImageType): string => {
-    return `https://server.vtonder.com/api/files/profile_images/${image.id}/${image.filename}`
+  async function getImageUrl(image: ProfileImage): Promise<string> {
+    const imageRef = ref(storage, image.storageLocation);
+    try {
+      return await getDownloadURL(imageRef);
+    } catch (error) {
+      return "";
+    }
   }
+
   const dislikeStyling = currentChoice === Choice.dislike ? "bg-red-500 text-white" : ""
   const likeStyling = currentChoice === Choice.like ? "bg-pink-300 text-white" : ""
   const superlikeStyling = currentChoice === Choice.superlike ? "bg-blue-300 text-white" : ""
 
   const updateProfileDecision = async (profileId: string, choice: Choice) => {
-    await pb.collection("profiles").update(profileId, { choice })
+    const ref = doc(db, "profiles", profileId);
+    await updateDoc(ref, { choice: choice });
   }
 
   const {
     mutate: setProfileChoice,
-  } = useMutation( {
+  } = useMutation({
     mutationFn: (data: { profileId: string, choice: Choice }) => {
       const { profileId, choice } = data
       return updateProfileDecision(profileId, choice)
     },
     onSuccess: (data) => {
-      queryClient.setQueryData([`profiles-for-session-${session}`, {id}], data)
+      queryClient.setQueryData([`profiles-for-session-${session}`, { id }], data)
       // queryClient.invalidateQueries({queryKey: [`profiles-for-session-${session}`]})
     }
   })
@@ -58,6 +69,16 @@ export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurren
       scrollable.current.scrollTo(0, 0)
     }
   }, [isCurrentPage])
+
+  useEffect(() => {
+    const getImages = async () => {
+      const urls = await Promise.all(images.map(async (image) => {
+        return await getImageUrl(image)
+      }))
+      setImageUrls(urls)
+    }
+    getImages()
+  }, [images])
 
   const clickLike = () => {
     setCurrentChoice(Choice.like)
@@ -86,18 +107,14 @@ export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurren
           <h1 className="justify-self-start text-2xl font-bold w-full pt-6 px-6 pb-[20px] font-fredoka">{name} <span className="text-lg font-semibold">{age}</span></h1>
           {renderChoice()}
         </div>
-        <img className="object-cover h-[365px] w-full bg-white" src={getImageUrl(images[0])} alt={name} onClick={() => openModal(getImageUrl(images[0]))} />
-        <div className="w-full px-6 py-[30px]">
-          <p className="text-lg font-fredoka">{bio}</p>
-        </div>
-      </div>
-      <img className="object-cover h-[365px] w-full rounded-3xl bg-white" src={getImageUrl(images[1])} alt={name} onClick={() => openModal(getImageUrl(images[1]))} />
+        <img className="object-cover h-[365px] w-full bg-white" src={imageUrls[0]} alt={name} onClick={() => openModal(imageUrls[0])} /> <div className="w-full px-6 py-[30px]"> <p className="text-lg font-fredoka">{bio}</p> </div> </div>
+      <img className="object-cover h-[365px] w-full rounded-3xl bg-white" src={imageUrls[1]} alt={name} onClick={() => openModal(imageUrls[1])} />
 
       <div className="flex flex-col gap-y-2 w-full px-6 py-[70px] rounded-3xl bg-white">
         <h1 className="text-lg font-fredoka">{prompts[0].prompt}</h1>
         <p className="font-semibold text-2xl font-fredoka">{prompts[0].answer}</p>
       </div>
-      <img className="object-cover h-[365px] w-full rounded-3xl bg-white" src={getImageUrl(images[2])} alt={name} onClick={() => openModal(getImageUrl(images[2]))} />
+      <img className="object-cover h-[365px] w-full rounded-3xl bg-white" src={imageUrls[2]} alt={name} onClick={() => openModal(imageUrls[2])} />
       <div className="flex flex-col gap-y-2 w-full px-6 py-[70px] rounded-3xl bg-white">
         <h1 className="text-lg font-fredoka">{prompts[1].prompt}</h1>
         <p className="font-semibold text-2xl font-fredoka">{prompts[1].answer}</p>
