@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { TiTimes, TiHeart, TiStarFullOutline } from 'react-icons/ti'
-import { Choice } from '../../static/Choice'
+import { Choice } from '../../static/choice'
 import { ProfileImage, ProfileType } from '../../types/ProfileTypes'
 import { ImageModal } from '../ImageModal/ImageModal';
 import NiceModal from '@ebay/nice-modal-react';

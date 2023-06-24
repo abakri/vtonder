@@ -1,4 +1,4 @@
-import { Choice } from "../static/Choice"
+import { Choice } from "../static/choice";
 
 export type ProfilePrompt = {
     prompt: string,

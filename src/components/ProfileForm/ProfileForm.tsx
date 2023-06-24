@@ -1,6 +1,5 @@
 import React from "react"
 import { useMutation, useQuery } from "react-query"
-import pb from "../../lib/pocketbase"
 import { Hearts } from "react-loader-spinner"
 
 import { Form, Formik } from 'formik';
@@ -13,8 +12,9 @@ import ProfileSubmissionHeader from "../SvgComponents/ProfileSubmissionHeader";
 import ProfileFormSubmissionConfirmation from "../SvgComponents/ProfileFormSubmissionConfirmation";
 import { SessionType } from "../../types/SessionTypes";
 import { db, storage } from "../../lib/firebase";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
+import { SUBMIT_PROFILE_URL } from "../../static/constants";
 
 export type PromptSubmissionType = {
   prompt: string
@@ -69,48 +69,60 @@ export const ProfileForm: React.FC = () => {
     return storageLocation;
   }
 
-  const uploadPrompts = async (data: ProfileSubmissionFormType, profileId: string,) => {
-    await pb.collection("profile_prompts").create({
-      profile: profileId,
-      answer: data.promptAnswer1,
-    })
-    await pb.collection("profile_prompts").create({
-      profile: profileId,
-      answer: data.promptAnswer2,
-    })
-    await pb.collection("profile_prompts").create({
-      profile: profileId,
-      answer: data.promptAnswer3,
-    })
+  const submitProfile = async (data: ProfileSubmissionFormType) => {
+    const {
+      name,
+      age,
+      bio,
+      social,
+      promptAnswer1,
+      promptAnswer2,
+      promptAnswer3,
+    } = data;
+
+    // TODO: Image uploading should happen when they choose the image.
+    // It should be deleted if they x out the form without submitting or they remove them image.
+    const imageLocation1 = await uploadImage(data.image1 as File);
+    const imageLocation2 = await uploadImage(data.image2 as File);
+    const imageLocation3 = await uploadImage(data.image3 as File);
+    const requestBody = {
+      name,
+      age,
+      bio,
+      social,
+      sessionId,
+      imageLocation1,
+      imageLocation2,
+      imageLocation3,
+      promptAnswer1,
+      promptAnswer2,
+      promptAnswer3,
+    };
+
+    const response = await fetch(SUBMIT_PROFILE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) throw new Error("Failed to submit profile");
   }
 
-  const createProfile = async (data: ProfileSubmissionFormType) => {
-    const image1Location = await uploadImage(data.image1 as File);
-    const image2Location = await uploadImage(data.image2 as File);
-    const image3Location = await uploadImage(data.image3 as File);
-
-    const sessionRef = doc(db, "sessions", sessionId as string);
-
-    await addDoc(collection(db, "profiles"), {
-      name: data.name,
-      age: data.age,
-      bio: data.bio,
-      social: data.social,
-      session: sessionRef,
-      images: [{ storageLocation: image1Location }, { storageLocation: image2Location }, { storageLocation: image3Location }],
-      prompts: [{ prompt: session?.prompts[0], answer: data.promptAnswer1 }, { prompt: session?.prompts[1], answer: data.promptAnswer2 }, { prompt: session?.prompts[2], answer: data.promptAnswer3 }]
-    })
-  }
-  const { mutate: submitForm, isLoading: isLoadingFormSubmit, isSuccess: formSubmitSuccess, isError: formSubmitError } = useMutation((data: ProfileSubmissionFormType) => {
-    return createProfile(data)
-  })
+  const {
+    mutate: submitForm,
+    isLoading: isLoadingFormSubmit,
+    isSuccess: formSubmitSuccess,
+    isError: formSubmitError,
+  } = useMutation((data: ProfileSubmissionFormType) => submitProfile(data));
 
   if (formSubmitSuccess) return (
-    <div className="flex flex-col w-full h-screen justify-center items-center pb-10">
+    <div className="flex flex-col w-full h-screen justify-center items-center pb-10" >
       <div className="flex justify-center w-[80%] lg:w-[60%]">
         <ProfileFormSubmissionConfirmation />
       </div>
-    </div>
+    </div >
   )
   if (!session?.open) return (
     <div className="flex flex-col w-full h-screen justify-center items-center pb-10">
@@ -175,7 +187,7 @@ export const ProfileForm: React.FC = () => {
                 boxShadow: "6px 6px 0px #ff5c98"
               }}
               type="submit"
-              disabled={isLoadingFormSubmit}
+              disabled={isLoadingFormSubmit || session == undefined || session == null}
             >
               Submit
             </button>

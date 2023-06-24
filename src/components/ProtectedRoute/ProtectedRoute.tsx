@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { ReactNode } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import pb from "../../lib/pocketbase"
+import { useNavigate } from "react-router-dom";
 import { auth } from "../../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
