@@ -2,6 +2,8 @@ import { addDoc, collection, doc, getDocs, query, serverTimestamp, updateDoc, wh
 import { auth, db } from "../lib/firebase";
 import { CreateSession, SessionType, ToggleSession } from "../types/SessionTypes";
 
+// TODO: Add ability to edit session (adding/deleting prompts, etc)
+
 export async function getSessionListFromFirestore(): Promise<SessionType[]> {
   const userId = auth.currentUser?.uid;
   if (!userId) throw new Error('No user logged in');
@@ -30,7 +32,11 @@ export async function createSessionInFirestore(data: CreateSession): Promise<Ses
   }
 
   const docRef = await addDoc(collection(db, 'sessions'), docData);
-  return { id: docRef.id, ...docData };
+  return {
+    id: docRef.id,
+    prompts: [], // for now, we manually add prompts to the session
+    ...docData,
+  };
 }
 
 export async function toggleSessionInFirestore(data: ToggleSession): Promise<void> {
