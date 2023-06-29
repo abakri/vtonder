@@ -1,10 +1,10 @@
-name: Deploy live
+name: Deploy to Live Channel
 'on':
   push:
     branches:
       - main
 jobs:
-  build_and_preview:
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -18,11 +18,11 @@ jobs:
 
       - name: Build project
         run: npm run build
-
-      - name: Deploy
+      
+      - name: Deploy Live
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_VTONDER_45E0F }}'
-          projectId: vtonder-45e0e
           channelId: live
+          projectId: vtonder-45e0f
