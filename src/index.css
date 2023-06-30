@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+       --color-text-primary: #000;
+       --color-text-lightest: #fff;
+       --color-text-outline: #ffd1dc;
+       --color-background-muted: #fff5f7;
+       --color-background-outline: #ffd1dc;
+       --color-border-primary: #ffd1dc;
+       --color-border-secondary: #ffd1dc;
+       --color-icon-primary: #ffd1dc;
+       --color-choice-border: #000;
+    }
+
+    .theme-chi {
+       --color-text-primary: #5f1011;
+       --color-text-outline: #5f1011;
+       --color-background-muted: #1d1010;
+       --color-background-outline: #5f1011;
+       --color-border-primary: #5f1011;
+       --color-border-secondary: #fff;
+       --color-icon-primary: #fff;
+       --color-choice-border: #fff;
+    }
+}

@@ -104,42 +104,42 @@ export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurren
     <div className="transform flex flex-col items-center min-w-full max-w-full scrollbar-hide overflow-y-scroll pt-2 px-2 pb-16 sm:p-8 gap-y-4 transition-transform duration-500" style={{ transform: `translateX(${-100 * currentPage}%)` }} ref={scrollable}>
       <div className="rounded-3xl bg-white w-full">
         <div className="flex items-center">
-          <h1 className="justify-self-start text-2xl font-bold w-full pt-6 px-6 pb-[20px] font-fredoka">{name} <span className="text-lg font-semibold">{age}</span></h1>
+          <h1 className="justify-self-start text-theme-primary text-2xl font-bold w-full pt-6 px-6 pb-[20px] font-fredoka">{name} <span className="text-theme-primary text-lg font-semibold">{age}</span></h1>
           {renderChoice()}
         </div>
-        <img className="object-cover h-[365px] w-full bg-white" src={imageUrls[0]} alt={name} onClick={() => openModal(imageUrls[0])} /> <div className="w-full px-6 py-[30px]"> <p className="text-lg font-fredoka">{bio}</p> </div> </div>
+        <img className="object-cover h-[365px] w-full bg-white" src={imageUrls[0]} alt={name} onClick={() => openModal(imageUrls[0])} /> <div className="w-full px-6 py-[30px]"> <p className="text-theme-primary text-lg font-fredoka">{bio}</p> </div> </div>
       <img className="object-cover h-[365px] w-full rounded-3xl bg-white" src={imageUrls[1]} alt={name} onClick={() => openModal(imageUrls[1])} />
 
       <div className="flex flex-col gap-y-2 w-full px-6 py-[70px] rounded-3xl bg-white">
-        <h1 className="text-lg font-fredoka">{prompts[0].prompt}</h1>
-        <p className="font-semibold text-2xl font-fredoka">{prompts[0].answer}</p>
+        <h1 className="text-lg text-theme-primary font-fredoka">{prompts[0].prompt}</h1>
+        <p className="text-theme-primary font-semibold text-2xl font-fredoka">{prompts[0].answer}</p>
       </div>
       <img className="object-cover h-[365px] w-full rounded-3xl bg-white" src={imageUrls[2]} alt={name} onClick={() => openModal(imageUrls[2])} />
       <div className="flex flex-col gap-y-2 w-full px-6 py-[70px] rounded-3xl bg-white">
-        <h1 className="text-lg font-fredoka">{prompts[1].prompt}</h1>
-        <p className="font-semibold text-2xl font-fredoka">{prompts[1].answer}</p>
+        <h1 className="text-theme-primary text-lg font-fredoka">{prompts[1].prompt}</h1>
+        <p className="text-theme-primary font-semibold text-2xl font-fredoka">{prompts[1].answer}</p>
       </div>
       <div className="flex flex-col gap-y-2 w-full px-6 py-[70px] rounded-3xl bg-white">
-        <h1 className="text-lg font-fredoka">{prompts[2].prompt}</h1>
-        <p className="font-semibold text-2xl font-fredoka">{prompts[2].answer}</p>
+        <h1 className="text-theme-primary text-lg font-fredoka">{prompts[2].prompt}</h1>
+        <p className="text-theme-primary font-semibold text-2xl font-fredoka">{prompts[2].answer}</p>
       </div>
       <div className="flex flex-row w-full justify-between items-center px-[15%] m-8">
         <button
-          className={`flex justify-center items-center bg-white border-4 border-black rounded-full text-[80px] select-none scale-100 transition ${dislikeStyling}`}
+          className={`flex justify-center items-center bg-white border-4 border-theme-choice rounded-full text-theme-primary text-[80px] select-none scale-100 transition ${dislikeStyling}`}
           onClick={clickDislike}
         >
           <TiTimes />
         </button>
         {
           <button
-            className={`flex justify-center items-center bg-white border-4 border-black rounded-full text-[80px] select-none scale-100 transition ${superlikeStyling}`}
+            className={`flex justify-center items-center bg-white border-4 border-theme-choice rounded-full text-theme-primary text-[80px] select-none scale-100 transition ${superlikeStyling}`}
             onClick={clickSuperlike}
           >
             <TiStarFullOutline />
           </button>
         }
         <button
-          className={`flex justify-center items-center bg-white border-4 border-black rounded-full text-[80px] select-none scale-100 transition ${likeStyling}`}
+          className={`flex justify-center items-center bg-white border-4 border-theme-choice rounded-full text-theme-primary text-[80px] select-none scale-100 transition ${likeStyling}`}
           onClick={clickLike}
         >
           <TiHeart />

@@ -11,6 +11,7 @@ import { MdOutlineSignalCellularAlt } from "react-icons/md";
 import { Logo } from "../SvgComponents/VTonderLogo";
 import { getProfilesForSessionFromFirebase } from "../../repositories/profile.repository";
 import { Choice } from "../../static/choice";
+import { getSessionById } from "../../repositories/session.repository";
 
 export const AppController: React.FC = ({ }) => {
   const { sessionId } = useParams();
@@ -28,7 +29,16 @@ export const AppController: React.FC = ({ }) => {
     return profiles
   }
 
-  const { data: profiles, isLoading, isError, isSuccess } = useQuery(`profiles-for-session-${sessionId}`, () => getProfilesForSessionFromFirebase(sessionId));
+  const {
+    data: session,
+  } = useQuery("session", () => getSessionById(sessionId));
+
+  const {
+    data: profiles,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useQuery(`profiles-for-session-${sessionId}`, () => getProfilesForSessionFromFirebase(sessionId));
 
   const filteredProfiles = useMemo(() => filterProfiles(profiles || []), [profiles, filter]) // only update filtered profiles when profiles is updated
 
@@ -58,36 +68,37 @@ export const AppController: React.FC = ({ }) => {
     }
   }
 
+  const theme = session?.theme;
 
   return (
-    <div className="w-screen h-screen bg-white">
+    <div className={`${theme || ''} w-screen h-screen`}>
       <div className="flex justify-center items-center w-screen h-screen bg-white">
-        <button className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-[#fff5f7] border-[#ffd1dc] text-4xl text-[#ff9cb4]" onClick={previousProfile}>
+        <button className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-theme-muted border-theme-primary text-4xl text-theme-outline" onClick={previousProfile}>
           <FaChevronLeft className="-translate-x-[2px]" />
         </button>
 
         {/* sound buttons */}
         <div className="flex mb-[470px] flex-col gap-y-4 h-[170px] w-[16px] overflow-hidden">
-          <div className="grow w-full bg-[#ffd1dc] rounded-lg translate-x-[8px]" />
-          <div className="grow w-full bg-[#ffd1dc] rounded-lg translate-x-[8px]" />
+          <div className="grow w-full bg-border rounded-lg translate-x-[8px]" />
+          <div className="grow w-full bg-theme-primary rounded-lg translate-x-[8px]" />
         </div>
 
         {/* phone */}
-        <div className="flex flex-col w-full h-full sm:w-[550px] sm:h-[952px] sm:border-[10px] sm:border-[#ffd1dc] sm:rounded-[32px] transition overflow-hidden">
-          <div className="flex h-[72px] border-b-4 border-[#ffd1dc] bg-[#fff5f7]">
+        <div className="flex flex-col w-full h-full sm:w-[550px] sm:h-[952px] sm:border-[10px] sm:border-theme-primary sm:rounded-[32px] transition overflow-hidden">
+          <div className="flex h-[72px] border-b-4 border-theme-secondary bg-theme-muted">
             <div className="basis-1/3 w-full"></div>
-            <div className="grow flex justify-center items-center w-full font-fredoka font-semibold text-[50px] text-[#ff9cb4] translate-x-2">
+            <div className="grow flex justify-center items-center w-full font-fredoka font-semibold text-[50px] text-theme-outline translate-x-2">
               <Logo />
             </div>
             <div className="basis-1/3 flex flex-row justify-end items-center py-4 pr-4 gap-x-3">
-              <MdOutlineSignalCellularAlt className="text-[24px] text-[#ffd1dc]" />
-              <FaWifi className="text-[24px] text-[#ffd1dc]" />
-              <TiBatteryLow className="text-[34px] text-[#ffd1dc] -translate-y-[1px]" />
+              <MdOutlineSignalCellularAlt className="text-[24px] text-theme-icon" />
+              <FaWifi className="text-[24px] text-theme-icon" />
+              <TiBatteryLow className="text-[34px] text-theme-icon -translate-y-[1px]" />
             </div>
           </div>
 
           {/* mask bounds for profiles */}
-          <div className="flex flex-row overflow-hidden bg-[#fff5f7]">
+          <div className="flex flex-row overflow-hidden bg-theme-muted">
             {renderProfiles()}
           </div>
         </div>
@@ -95,16 +106,15 @@ export const AppController: React.FC = ({ }) => {
 
         {/* power button */}
         <div className="flex mb-[490px] flex-col gap-y-4 h-[110px] w-[16px] overflow-hidden">
-          <div className="w-full h-full bg-[#ffd1dc] rounded-lg -translate-x-[8px]" />
+          <div className="w-full h-full bg-theme-outline rounded-lg -translate-x-[8px]" />
         </div>
 
-        <button className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-[#fff5f7] border-[#ffd1dc] text-4xl text-[#ff9cb4]" onClick={nextProfile}>
+        <button className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-theme-muted border-theme-primary text-4xl text-theme-outline" onClick={nextProfile}>
           <FaChevronRight className="=translate-x-[2px]" />
         </button>
 
         <Dropdown options={['all', 'like', 'superlike', 'dislike']} value={'all'} onChange={({ value }) => setFilter(value)} />
       </div>
     </div>
-
   )
 };

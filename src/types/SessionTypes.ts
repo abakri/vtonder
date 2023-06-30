@@ -3,6 +3,7 @@ export type SessionType = {
     name: string;
     open: boolean;
     prompts: string[];
+    theme: string | null;
 }
 
 export type CreateSession = {

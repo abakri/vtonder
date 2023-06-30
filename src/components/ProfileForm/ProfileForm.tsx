@@ -10,11 +10,10 @@ import { TextInput } from "../SharedComponents/TextInput";
 import { TextArea } from "../SharedComponents/TextArea";
 import ProfileSubmissionHeader from "../SvgComponents/ProfileSubmissionHeader";
 import ProfileFormSubmissionConfirmation from "../SvgComponents/ProfileFormSubmissionConfirmation";
-import { SessionType } from "../../types/SessionTypes";
-import { db, storage } from "../../lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { storage } from "../../lib/firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { SUBMIT_PROFILE_URL } from "../../static/constants";
+import { getSessionById } from "../../repositories/session.repository";
 
 export type PromptSubmissionType = {
   prompt: string
@@ -24,17 +23,10 @@ export type PromptSubmissionType = {
 export const ProfileForm: React.FC = () => {
   const { sessionId } = useParams()
 
-  async function getSession(): Promise<SessionType> {
-    if (!sessionId) throw new Error("No session id");
-
-    const sessionRef = doc(db, "sessions", sessionId);
-    const sessionSnap = await getDoc(sessionRef);
-    if (!sessionSnap.exists()) throw new Error("Session does not exist");
-
-    return sessionSnap.data() as SessionType;
-  }
-
-  const { data: session, isLoading: loadingSession } = useQuery("session", getSession)
+  const {
+    data: session,
+    isLoading: loadingSession,
+  } = useQuery("session", () => getSessionById(sessionId));
 
   type ProfileSubmissionFormType = {
     name: string
