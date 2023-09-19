@@ -1,2 +1,2 @@
 # vtonder
-fake dating app UI
+for streamers to connect with fans
