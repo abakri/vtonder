@@ -14,6 +14,7 @@ import { storage } from "../../lib/firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { SUBMIT_PROFILE_URL } from "../../static/constants";
 import { getSessionById } from "../../repositories/session.repository";
+import { Choice } from "../../static/choice";
 
 export type PromptSubmissionType = {
   prompt: string
@@ -74,6 +75,8 @@ export const ProfileForm: React.FC = () => {
 
     // TODO: Image uploading should happen when they choose the image.
     // It should be deleted if they x out the form without submitting or they remove them image.
+    // This will speed up the submission process since the image will already be uploaded by the time they submit.
+    // The user shouldn't be allowed to click the submit button until the images are uploaded.
     const imageLocation1 = await uploadImage(data.image1 as File);
     const imageLocation2 = await uploadImage(data.image2 as File);
     const imageLocation3 = await uploadImage(data.image3 as File);

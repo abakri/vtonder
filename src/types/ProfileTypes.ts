@@ -14,7 +14,7 @@ export type ProfileType = {
     createdAt: Date;
     name: string;
     age: string;
-    choice: Choice | null;
+    choice: Choice;
     bio: string;
     session: string;
     images: ProfileImage[];

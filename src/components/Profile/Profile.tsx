@@ -15,9 +15,10 @@ type ProfileProps = {
   profile: ProfileType
   currentPage: number
   isCurrentPage: boolean
+  updateLocalProfileDecision: (profileId: string, choice: Choice) => void
 }
 
-export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurrentPage }) => {
+export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurrentPage, updateLocalProfileDecision}) => {
   const queryClient = useQueryClient()
 
   const { id, age, choice, name, bio, images, prompts, session } = profile
@@ -53,6 +54,9 @@ export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurren
     },
     onSuccess: (data) => {
       queryClient.setQueryData([`profiles-for-session-${session}`, { id }], data)
+      // An idea to invalidate the query for the profiles list whenever you update a choice,
+      // but this is inefficient because it will refetch the entire list of profiles when you update a single profile.
+      // keeping this here for now in case we want to use it later, or for ideas on how to invalidate queries.
       // queryClient.invalidateQueries({queryKey: [`profiles-for-session-${session}`]})
     }
   })
@@ -83,16 +87,19 @@ export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurren
   const clickLike = () => {
     setCurrentChoice(Choice.like)
     setProfileChoice({ profileId: id, choice: Choice.like })
+    updateLocalProfileDecision(id, Choice.like)
   }
 
   const clickDislike = () => {
     setCurrentChoice(Choice.dislike)
     setProfileChoice({ profileId: id, choice: Choice.dislike })
+    updateLocalProfileDecision(id, Choice.dislike)
   }
 
   const clickSuperlike = () => {
     setCurrentChoice(Choice.superlike)
     setProfileChoice({ profileId: id, choice: Choice.superlike })
+    updateLocalProfileDecision(id, Choice.superlike)
   }
 
 

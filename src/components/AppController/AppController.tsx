@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState , useEffect} from "react";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { useParams } from "react-router";
@@ -13,20 +13,72 @@ import { getProfilesForSessionFromFirebase } from "../../repositories/profile.re
 import { Choice } from "../../static/choice";
 import { getSessionById } from "../../repositories/session.repository";
 
+enum Filter {
+  all = 'all',
+  like = 'like',
+  superlike = 'superlike',
+  dislike = 'dislike',
+}
+
+const filterToChoiceMapping = {
+  [Filter.all]: Object.values(Choice),
+  [Filter.like]: [Choice.like, Choice.superlike],
+  [Filter.superlike]: [Choice.superlike],
+  [Filter.dislike]: [Choice.dislike],
+}
+
 export const AppController: React.FC = ({ }) => {
   const { sessionId } = useParams();
   if (!sessionId) return (<div>no session id</div>);
 
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [filter, setFilter] = useState<string>('all');
+  const [currentFilter, setCurrentFilter] = useState<Filter>(Filter.all);
 
-  const filterProfiles = (profiles: ProfileType[]): ProfileType[] => {
-    setCurrentPage(0); // reset page to the beginning
-    if (filter === 'all') return profiles;
-    if (filter === 'like') return profiles.filter(profile => profile.choice === Choice.like || profile.choice === Choice.superlike);
-    if (filter === 'superlike') return profiles.filter(profile => { profile.choice === Choice.superlike });
-    if (filter === 'dislike') return profiles.filter(profile => profile.choice === Choice.dislike);
-    return profiles
+  const [localProfiles, setLocalProfiles] = useState<ProfileType[]>([]);
+
+  const updateLocalProfileDecision = (profileId: string, choice: Choice) => {
+    // We pass this function to the Profile component so that it can update the localProfiles state.
+    // This is so that we can update the choice of a profile without having to refetch the entire list of profiles.
+    // When someone makes a decision on the profile:
+    // - If the current filter should still show that profile, then don't do anything, just update the choice locally.
+    // - If the current filter should not show that profile, then it should disappear, and we show the next available profile.
+    //     - If it was the last profile, then we show the previous profile.
+    //     - If it was not the last profile, then we show the next profile.
+    
+    var newCurrentPage = currentPage;
+
+    // Check if the current filter does not show the profile
+    if (!filterToChoiceMapping[currentFilter].includes(choice)) {
+      // Check if the profile is the last profile
+      if (currentPage === filteredProfiles.length - 1) {
+        // If it is the last profile, then show the previous profile
+        newCurrentPage = currentPage - 1
+      }
+      // TODO: If it goes to the next profile, we should have some sort of animation to show that the profile is disappearing, 
+      // and the next profile is appearing.
+    }
+
+    const updatedProfiles = localProfiles.map(profile => {
+      if (profile.id === profileId) {
+        return {
+          ...profile,
+          choice: choice,
+        }
+      }
+      return profile;
+    })
+    setLocalProfiles(updatedProfiles);
+    setCurrentPage(newCurrentPage);
+  }
+
+  const updateFilter = (filter: Filter) => {
+    if (filter === currentFilter) return;
+    setCurrentPage(0);
+    setCurrentFilter(filter);
+  }
+
+  const filterProfiles = (filter: Filter, profiles: ProfileType[]): ProfileType[] => {
+    return profiles.filter(profile => filterToChoiceMapping[filter].includes(profile.choice));
   }
 
   const {
@@ -39,8 +91,12 @@ export const AppController: React.FC = ({ }) => {
     isError,
     isSuccess,
   } = useQuery(`profiles-for-session-${sessionId}`, () => getProfilesForSessionFromFirebase(sessionId));
+  
+  useEffect(() => {
+    setLocalProfiles(profiles || []);
+  }, [profiles])
 
-  const filteredProfiles = useMemo(() => filterProfiles(profiles || []), [profiles, filter]) // only update filtered profiles when profiles is updated
+  const filteredProfiles = useMemo(() => filterProfiles(currentFilter, localProfiles), [localProfiles, currentFilter]) // only update filtered profiles when profiles is updated
 
   const nextProfile = () => {
     if (profiles && currentPage < filteredProfiles.length - 1) setCurrentPage(currentPage + 1);
@@ -62,6 +118,7 @@ export const AppController: React.FC = ({ }) => {
             currentPage={currentPage}
             isCurrentPage={index === currentPage}
             profile={profile}
+            updateLocalProfileDecision={updateLocalProfileDecision}
           />
         )
       })
@@ -113,7 +170,7 @@ export const AppController: React.FC = ({ }) => {
           <FaChevronRight className="=translate-x-[2px]" />
         </button>
 
-        <Dropdown options={['all', 'like', 'superlike', 'dislike']} value={'all'} onChange={({ value }) => setFilter(value)} />
+        <Dropdown options={Object.keys(Filter)} value={Filter.all} onChange={({ value }) => updateFilter(Filter[value as keyof typeof Filter])} />
       </div>
     </div>
   )
