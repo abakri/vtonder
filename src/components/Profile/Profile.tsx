@@ -108,7 +108,11 @@ export const Profile: React.FC<ProfileProps> = ({ profile, currentPage, isCurren
   }
 
   return (
-    <div className="transform flex flex-col items-center min-w-full max-w-full scrollbar-hide overflow-y-scroll pt-2 px-2 pb-16 sm:p-8 gap-y-4 transition-transform duration-500" style={{ transform: `translateX(${-100 * currentPage}%)` }} ref={scrollable}>
+    <div
+      className="transform flex flex-col items-center min-w-full max-w-full scrollbar-hide overflow-y-scroll pt-2 px-2 pb-16 sm:p-8 gap-y-4 transition-transform duration-500"
+      style={{ transform: `translateX(${-100 * currentPage}%)` }}
+      ref={scrollable}
+    >
       <div className="rounded-3xl bg-white w-full">
         <div className="flex items-center">
           <h1 className="justify-self-start text-theme-primary text-2xl font-bold w-full pt-6 px-6 pb-[20px] font-fredoka">{name} <span className="text-theme-primary text-lg font-semibold">{age}</span></h1>

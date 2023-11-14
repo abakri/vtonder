@@ -12,6 +12,7 @@ import { getProfilesForSessionFromFirebase } from "../../repositories/profile.re
 import { Choice } from "../../static/choice";
 import { getSessionById } from "../../repositories/session.repository";
 import Select from "react-select";
+import { Hearts } from "react-loader-spinner";
 
 enum Filter {
   all = 'all',
@@ -113,11 +114,25 @@ export const AppController: React.FC = ({ }) => {
   }
 
   const renderProfiles = () => {
-    if (isLoading) return <div>Loading...</div>
-    if (isError) return <div>Error</div>
-    if (!profiles) return <div>No profiles</div>
+    if (isLoading) return (
+      <div className="w-full h-full flex flex-col justify-center items-center font-fredoka text-[24px]">
+        <div>
+          <Hearts
+            height="80"
+            width="80"
+            color="#ff5191"
+            ariaLabel="hearts-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+        <div>Loading...</div>
+      </div>
+    )
+    if (isError) return <div className="w-full h-full flex justify-center items-center font-fredoka text-[24px]">Error</div>
+    if (!profiles || (isSuccess && !filteredProfiles.length)) return <div className="w-full h-full flex justify-center items-center font-fredoka text-[24px]">No profiles</div>
     if (isSuccess) {
-      if (!filteredProfiles.length) return <div>No profiles</div>
       return filteredProfiles.map((profile, index) => {
         return (
           <Profile
@@ -163,7 +178,7 @@ export const AppController: React.FC = ({ }) => {
           </div>
 
           {/* mask bounds for profiles */}
-          <div className="flex flex-row overflow-hidden bg-theme-muted">
+          <div className="w-full h-full flex flex-row overflow-hidden bg-theme-muted">
             {renderProfiles()}
           </div>
         </div>
