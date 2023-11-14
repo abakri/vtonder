@@ -1,5 +1,4 @@
-import React, { useMemo, useState , useEffect} from "react";
-import Dropdown from 'react-dropdown';
+import React, { useMemo, useState, useEffect } from "react";
 import 'react-dropdown/style.css';
 import { useParams } from "react-router";
 import { useQuery } from "react-query";
@@ -12,6 +11,7 @@ import { Logo } from "../SvgComponents/VTonderLogo";
 import { getProfilesForSessionFromFirebase } from "../../repositories/profile.repository";
 import { Choice } from "../../static/choice";
 import { getSessionById } from "../../repositories/session.repository";
+import Select from "react-select";
 
 enum Filter {
   all = 'all',
@@ -19,6 +19,13 @@ enum Filter {
   superlike = 'superlike',
   dislike = 'dislike',
 }
+
+const filteringOptions = [
+  { value: Filter.all, label: 'Show All' },
+  { value: Filter.like, label: 'Liked' },
+  { value: Filter.superlike, label: 'Superliked' },
+  { value: Filter.dislike, label: 'Disliked' },
+]
 
 const filterToChoiceMapping = {
   [Filter.all]: Object.values(Choice),
@@ -44,7 +51,7 @@ export const AppController: React.FC = ({ }) => {
     // - If the current filter should not show that profile, then it should disappear, and we show the next available profile.
     //     - If it was the last profile, then we show the previous profile.
     //     - If it was not the last profile, then we show the next profile.
-    
+
     var newCurrentPage = currentPage;
 
     // Check if the current filter does not show the profile
@@ -91,7 +98,7 @@ export const AppController: React.FC = ({ }) => {
     isError,
     isSuccess,
   } = useQuery(`profiles-for-session-${sessionId}`, () => getProfilesForSessionFromFirebase(sessionId));
-  
+
   useEffect(() => {
     setLocalProfiles(profiles || []);
   }, [profiles])
@@ -125,12 +132,13 @@ export const AppController: React.FC = ({ }) => {
     }
   }
 
-  const theme = session?.theme;
-
   return (
-    <div className={`${theme || ''} w-screen h-screen`}>
+    <div className="w-screen h-screen">
       <div className="flex justify-center items-center w-screen h-screen bg-white">
-        <button className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-theme-muted border-theme-primary text-4xl text-theme-outline" onClick={previousProfile}>
+        <button
+          className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-theme-muted border-theme-primary text-4xl text-theme-outline"
+          onClick={previousProfile}
+        >
           <FaChevronLeft className="-translate-x-[2px]" />
         </button>
 
@@ -170,8 +178,31 @@ export const AppController: React.FC = ({ }) => {
           <FaChevronRight className="=translate-x-[2px]" />
         </button>
 
-        <Dropdown options={Object.keys(Filter)} value={Filter.all} onChange={({ value }) => updateFilter(Filter[value as keyof typeof Filter])} />
+        <div className="absolute top-0 right-0 mt-4 mr-4 w-[200px]">
+          <Select
+            options={filteringOptions}
+            defaultValue={filteringOptions[0]}
+            styles={{
+              control: (provided, _) => ({
+                ...provided,
+                color: 'var(--color-text-primary)',
+                fontFamily: 'Fredoka',
+                boxShadow: 'none',
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                color: 'var(--color-text-primary)',
+                fontFamily: 'Fredoka',
+                backgroundColor: state.isFocused ? 'var(--color-background-outline)' : 'white',
+              }),
+            }}
+            onChange={(option) => {
+              if (option) {
+                updateFilter(option.value as Filter);
+              }
+            }} />
+        </div>
       </div>
-    </div>
+    </div >
   )
 };

@@ -14,7 +14,6 @@ import { storage } from "../../lib/firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { SUBMIT_PROFILE_URL } from "../../static/constants";
 import { getSessionById } from "../../repositories/session.repository";
-import { Choice } from "../../static/choice";
 
 export type PromptSubmissionType = {
   prompt: string
