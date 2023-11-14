@@ -134,7 +134,7 @@ export const AppController: React.FC = ({ }) => {
 
   return (
     <div className="w-screen h-screen">
-      <div className="flex justify-center items-center w-screen h-screen bg-white">
+      <div className="flex justify-center items-center w-screen h-screen bg-gradient-45 from-white to-[#ff7e97]">
         <button
           className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-theme-muted border-theme-primary text-4xl text-theme-outline"
           onClick={previousProfile}

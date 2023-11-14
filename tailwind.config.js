@@ -1,6 +1,9 @@
 module.exports = ({
   content: ["./src/**/*.tsx", "./src/**/*.ts", "./index.html"],
   theme: {
+    backgroundImage: {
+      'gradient-45': 'linear-gradient(45deg, var(--tw-gradient-from) 20%, var(--tw-gradient-to) 100%)',
+    },
     fontFamily: {
       fredoka: ["Fredoka", "sans-serif"],
     },
