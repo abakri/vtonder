@@ -150,17 +150,19 @@ export const AppController: React.FC = ({ }) => {
   }
 
   if (!session) return (
-    <div className="flex justify-center items-center w-screen h-screen text-[32px] font-fredoka">
+    <div className="flex flex-col justify-center items-center w-screen h-screen text-[32px] font-fredoka">
       <div>Loading...</div>
-      <Hearts
-        height="80"
-        width="80"
-        color="#ff5191"
-        ariaLabel="hearts-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
-        visible={true}
-      />
+      <div>
+        <Hearts
+          height="128"
+          width="128"
+          color="#ff5191"
+          ariaLabel="hearts-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      </div>
     </div>
   )
 
@@ -225,7 +227,7 @@ export const AppController: React.FC = ({ }) => {
                 ...provided,
                 color: 'var(--color-text-primary)',
                 fontFamily: 'Fredoka',
-                backgroundColor: state.isFocused ? 'var(--color-background-outline)' : 'white',
+                backgroundColor: state.isFocused ? 'var(--color-dropdown-select-background)' : 'white',
               }),
             }}
             onChange={(option) => {

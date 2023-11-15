@@ -14,6 +14,7 @@
        --color-choice-border: #000;
        --color-gradient-start: #fff;
        --color-gradient-end: #fe7e97;
+       --color-dropdown-select-background: #ffd1dc;
     }
 
     .theme-chi {
@@ -27,5 +28,6 @@
        --color-choice-border: #fff;
        --color-gradient-start: #000;
        --color-gradient-end: #3b0206;
+       --color-dropdown-select-background: #dddddd;
     }
 }
