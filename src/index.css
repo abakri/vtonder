@@ -3,9 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
+    .theme-base {
        --color-text-primary: #000;
-       --color-text-lightest: #fff;
        --color-text-outline: #ffd1dc;
        --color-background-muted: #fff5f7;
        --color-background-outline: #ffd1dc;
@@ -13,6 +12,8 @@
        --color-border-secondary: #ffd1dc;
        --color-icon-primary: #ffd1dc;
        --color-choice-border: #000;
+       --color-gradient-start: #fff;
+       --color-gradient-end: #fe7e97;
     }
 
     .theme-chi {
@@ -24,5 +25,7 @@
        --color-border-secondary: #fff;
        --color-icon-primary: #fff;
        --color-choice-border: #fff;
+       --color-gradient-start: #000;
+       --color-gradient-end: #3b0206;
     }
 }

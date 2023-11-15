@@ -8,6 +8,10 @@ module.exports = ({
       fredoka: ["Fredoka", "sans-serif"],
     },
     extend: {
+      colors: {
+        gradstart: 'var(--color-gradient-start)',
+        gradend: 'var(--color-gradient-end)',
+      },
       textColor: {
         theme: {
           primary: 'var(--color-text-primary)',

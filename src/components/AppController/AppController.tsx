@@ -93,6 +93,8 @@ export const AppController: React.FC = ({ }) => {
     data: session,
   } = useQuery("session", () => getSessionById(sessionId));
 
+  const theme = session?.theme || 'theme-base';
+
   const {
     data: profiles,
     isLoading,
@@ -147,9 +149,24 @@ export const AppController: React.FC = ({ }) => {
     }
   }
 
+  if (!session) return (
+    <div className="flex justify-center items-center w-screen h-screen text-[32px] font-fredoka">
+      <div>Loading...</div>
+      <Hearts
+        height="80"
+        width="80"
+        color="#ff5191"
+        ariaLabel="hearts-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+      />
+    </div>
+  )
+
   return (
-    <div className="w-screen h-screen">
-      <div className="flex justify-center items-center w-screen h-screen bg-gradient-45 from-white to-[#ff7e97]">
+    <div className={theme}>
+      <div className="flex justify-center items-center w-screen h-screen bg-gradient-45 from-gradstart to-gradend">
         <button
           className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-theme-muted border-theme-primary text-4xl text-theme-outline"
           onClick={previousProfile}
@@ -165,7 +182,7 @@ export const AppController: React.FC = ({ }) => {
 
         {/* phone */}
         <div className="flex flex-col w-full h-full sm:w-[550px] sm:h-[952px] sm:border-[10px] sm:border-theme-primary sm:rounded-[32px] transition overflow-hidden">
-          <div className="flex h-[72px] border-b-4 border-theme-secondary bg-theme-muted">
+          <div className="flex h-[72px] border-b-2 border-theme-secondary bg-theme-muted">
             <div className="basis-1/3 w-full"></div>
             <div className="grow flex justify-center items-center w-full font-fredoka font-semibold text-[50px] text-theme-outline translate-x-2">
               <Logo />
@@ -218,6 +235,6 @@ export const AppController: React.FC = ({ }) => {
             }} />
         </div>
       </div>
-    </div >
+    </div>
   )
 };
