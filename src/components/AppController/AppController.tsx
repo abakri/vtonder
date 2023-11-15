@@ -165,7 +165,7 @@ export const AppController: React.FC = ({ }) => {
   )
 
   return (
-    <div className={theme}>
+    <div className="theme-chi">
       <div className="flex justify-center items-center w-screen h-screen bg-gradient-45 from-gradstart to-gradend">
         <button
           className="flex justify-center items-center rounded-2xl border-4 w-16 h-16 bg-theme-muted border-theme-primary text-4xl text-theme-outline"
