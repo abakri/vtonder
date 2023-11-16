@@ -185,9 +185,21 @@ export const AppController: React.FC = ({ }) => {
         {/* phone */}
         <div className="flex flex-col w-full h-full sm:w-[550px] sm:h-[952px] sm:border-[10px] sm:border-theme-primary sm:rounded-[32px] transition overflow-hidden">
           <div className="flex h-[72px] border-b-2 border-theme-secondary bg-theme-muted">
-            <div className="basis-1/3 w-full"></div>
+            <div className="basis-1/3 w-full h-full flex justify-center items-center pl-8">
+              <img
+                className="object-contain scale-150"
+                src="https://firebasestorage.googleapis.com/v0/b/vtonder-45e0f.appspot.com/o/static%2Fvtonder-logo-chiawara.png?alt=media&token=0db2d1c8-e848-44f3-bfd8-6164ea32b679"
+                alt="Vtonder Chiawara Theme Logo"
+              />
+            </div>
             <div className="grow flex justify-center items-center w-full font-fredoka font-semibold text-[50px] text-theme-outline translate-x-2">
-              <Logo />
+              {/*<Logo />*/}
+              <img
+                className="object-contain h-[130%]"
+                src="https://firebasestorage.googleapis.com/v0/b/vtonder-45e0f.appspot.com/o/static%2Fchiawara_logo.png?alt=media&token=3be6cc17-c2bf-4c10-b791-3d4f23b197be"
+                alt="Chiawara Logo"
+              />
+
             </div>
             <div className="basis-1/3 flex flex-row justify-end items-center py-4 pr-4 gap-x-3">
               <MdOutlineSignalCellularAlt className="text-[24px] text-theme-icon" />
